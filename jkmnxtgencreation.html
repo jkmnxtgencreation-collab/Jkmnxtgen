@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JKM NXT GEN CREATION | Next-Gen Web Development</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon-blue: #00d4ff;
+    --neon-gold: #ffd700;
+    --neon-purple: #b44fff;
+    --neon-green: #00ff88;
+    --dark-bg: #020814;
+    --card-bg: rgba(255,255,255,0.03);
+    --glass: rgba(0, 212, 255, 0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark-bg);
+    color: #e0f0ff;
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--neon-blue);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-blue);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--neon-blue);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    opacity: 0.5;
+  }
+
+  /* ANIMATED BG GRID */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridShift 20s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes gridShift {
+    from { background-position: 0 0; }
+    to { background-position: 60px 60px; }
+  }
+
+  /* GLOWING ORBS */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    animation: orbFloat 8s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 500px; height: 500px; background: rgba(0,212,255,0.12); top: -100px; left: -150px; }
+  .orb-2 { width: 400px; height: 400px; background: rgba(180,79,255,0.12); bottom: -100px; right: -100px; animation-delay: -4s; }
+  .orb-3 { width: 300px; height: 300px; background: rgba(255,215,0,0.07); top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -2s; }
+  @keyframes orbFloat {
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(40px) scale(1.08); }
+  }
+
+  /* PARTICLES CANVAS */
+  #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(20px);
+    background: rgba(2,8,20,0.7);
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+    transition: all 0.3s;
+  }
+  nav.scrolled {
+    padding: 12px 40px;
+    background: rgba(2,8,20,0.95);
+    border-bottom-color: rgba(0,212,255,0.3);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+  }
+  .nav-logo span { color: var(--neon-gold); -webkit-text-fill-color: var(--neon-gold); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    color: rgba(200,230,255,0.7);
+    text-decoration: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 1px;
+    background: var(--neon-blue);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--neon-blue); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    color: #fff !important;
+    padding: 8px 22px;
+    border-radius: 4px;
+    font-weight: 700 !important;
+    transition: box-shadow 0.3s, transform 0.2s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { box-shadow: 0 0 25px rgba(0,212,255,0.6); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    overflow: hidden;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--neon-blue);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,136,0.5)} 50%{box-shadow:0 0 0 6px rgba(0,255,136,0)} }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    animation: fadeDown 0.9s 0.1s ease both;
+  }
+  .hero-title .line1 {
+    display: block;
+    background: linear-gradient(135deg, #fff 30%, var(--neon-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-title .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--neon-gold), #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 0.65em;
+    letter-spacing: 6px;
+    margin-top: 8px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.3rem;
+    color: rgba(200,230,255,0.65);
+    max-width: 600px;
+    line-height: 1.7;
+    margin: 24px auto 48px;
+    font-weight: 400;
+    animation: fadeDown 1s 0.2s ease both;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeDown 1s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    color: #fff;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 40px rgba(0,212,255,0.5), 0 0 80px rgba(180,79,255,0.3);
+    transform: translateY(-3px);
+  }
+  .btn-primary:hover::before { opacity: 1; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--neon-blue);
+    padding: 15px 38px;
+    border: 1.5px solid var(--neon-blue);
+    border-radius: 6px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+  }
+  .btn-secondary:hover {
+    background: rgba(0,212,255,0.1);
+    box-shadow: 0 0 30px rgba(0,212,255,0.3);
+    transform: translateY(-3px);
+  }
+
+  /* STATS STRIP */
+  .stats-strip {
+    position: relative; z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    background: rgba(0,212,255,0.04);
+    border-top: 1px solid rgba(0,212,255,0.15);
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+    padding: 32px 40px;
+  }
+  .stat-item {
+    flex: 1;
+    max-width: 200px;
+    text-align: center;
+    padding: 0 24px;
+    border-right: 1px solid rgba(0,212,255,0.12);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    color: rgba(200,230,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  /* SECTION COMMON */
+  section { position: relative; z-index: 1; }
+  .section-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--neon-blue);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff, rgba(200,230,255,0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+  }
+  .section-title span {
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .section-sub {
+    color: rgba(200,230,255,0.55);
+    font-size: 1.1rem;
+    margin-top: 16px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+
+  /* SERVICES */
+  .services { padding: 100px 40px; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .service-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 16px;
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    backdrop-filter: blur(10px);
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .service-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(0,212,255,0.3);
+    box-shadow: 0 20px 60px rgba(0,212,255,0.1);
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .service-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .service-desc {
+    color: rgba(200,230,255,0.55);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .service-card .glow-bg {
+    position: absolute;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    filter: blur(60px);
+    bottom: -50px; right: -30px;
+    opacity: 0.12;
+    transition: opacity 0.4s;
+  }
+  .service-card:hover .glow-bg { opacity: 0.25; }
+
+  /* PRICING */
+  .pricing { padding: 100px 40px; background: rgba(0,0,0,0.3); }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  .price-card {
+    border-radius: 24px;
+    padding: 44px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    backdrop-filter: blur(20px);
+  }
+
+  .price-card.basic {
+    background: linear-gradient(145deg, rgba(0,30,60,0.9), rgba(0,15,35,0.95));
+    border: 1px solid rgba(0,100,200,0.4);
+  }
+  .price-card.premium {
+    background: linear-gradient(145deg, rgba(0,40,20,0.9), rgba(0,20,10,0.95));
+    border: 1px solid rgba(0,180,80,0.4);
+    transform: scale(1.03);
+    z-index: 2;
+  }
+  .price-card.elite {
+    background: linear-gradient(145deg, rgba(40,0,70,0.9), rgba(20,0,40,0.95));
+    border: 1px solid rgba(150,0,255,0.4);
+  }
+
+  .price-card:hover { transform: scale(1.04) translateY(-6px); box-shadow: 0 30px 80px rgba(0,0,0,0.4); }
+  .price-card.premium:hover { transform: scale(1.06) translateY(-6px); }
+
+  .price-badge {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 100px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .basic .price-badge { background: rgba(0,150,255,0.15); color: #00aaff; border: 1px solid rgba(0,150,255,0.3); }
+  .premium .price-badge { background: rgba(0,200,100,0.15); color: #00dd80; border: 1px solid rgba(0,200,100,0.3); }
+  .elite .price-badge { background: rgba(180,0,255,0.15); color: #cc55ff; border: 1px solid rgba(180,0,255,0.3); }
+
+  .price-popular {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: linear-gradient(135deg, var(--neon-green), #00aaff);
+    color: #000;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+
+  .price-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+
+  .price-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+  .basic .price-name { color: #5bc8ff; }
+  .premium .price-name { color: #44ffaa; }
+  .elite .price-name { color: #cc55ff; }
+
+  .price-tagline { color: rgba(200,230,255,0.5); font-size: 0.9rem; margin-bottom: 28px; line-height: 1.5; }
+
+  .price-amount {
+    font-family: 'Orbitron', monospace;
+    font-size: 3.2rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .price-amount .currency { font-size: 1.6rem; vertical-align: super; }
+  .basic .price-amount { color: #5bc8ff; }
+  .premium .price-amount { color: #44ffaa; }
+  .elite .price-amount { color: #cc55ff; }
+
+  .price-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 28px 0;
+  }
+
+  .price-features { list-style: none; margin-bottom: 32px; }
+  .price-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    font-size: 0.95rem;
+    color: rgba(200,230,255,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .price-features li:last-child { border-bottom: none; }
+  .price-features li .check { font-size: 0.9rem; }
+  .basic .price-features li .check { color: #5bc8ff; }
+  .premium .price-features li .check { color: #44ffaa; }
+  .elite .price-features li .check { color: #cc55ff; }
+
+  .best-for {
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: rgba(200,230,255,0.6);
+  }
+  .basic .best-for { background: rgba(0,150,255,0.07); border: 1px solid rgba(0,150,255,0.15); }
+  .premium .best-for { background: rgba(0,200,100,0.07); border: 1px solid rgba(0,200,100,0.15); }
+  .elite .best-for { background: rgba(180,0,255,0.07); border: 1px solid rgba(180,0,255,0.15); }
+  .best-for strong { display: block; font-family: 'Orbitron', monospace; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .basic .best-for strong { color: #5bc8ff; }
+  .premium .best-for strong { color: #44ffaa; }
+  .elite .best-for strong { color: #cc55ff; }
+
+  .price-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border-radius: 10px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .basic .price-btn { background: linear-gradient(135deg, #0080ff, #00d4ff); color: #fff; }
+  .premium .price-btn { background: linear-gradient(135deg, #00cc66, #00ffaa); color: #000; }
+  .elite .price-btn { background: linear-gradient(135deg, #9900ff, #cc55ff); color: #fff; }
+  .price-btn:hover { transform: scale(1.03); box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+
+  /* PRICE GLOW BG */
+  .price-card .glow-corner {
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    bottom: -80px; right: -60px;
+    filter: blur(60px);
+    opacity: 0.2;
+    pointer-events: none;
+  }
+  .basic .glow-corner { background: #0080ff; }
+  .premium .glow-corner { background: #00cc66; }
+  .elite .glow-corner { background: #9900ff; }
+
+  /* NOTICE BOX */
+  .notice-section { padding: 0 40px 60px; }
+  .notice-box {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(255,215,0,0.05);
+    border: 1px solid rgba(255,215,0,0.25);
+    border-radius: 16px;
+    padding: 28px 36px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .notice-icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
+  .notice-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--neon-gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .notice-text {
+    color: rgba(200,230,255,0.6);
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .notice-text strong { color: var(--neon-gold); }
+
+  /* WHY US */
+  .why-us { padding: 100px 40px; }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .why-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 32px 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .why-card:hover {
+    border-color: rgba(0,212,255,0.2);
+    background: rgba(0,212,255,0.04);
+    transform: translateY(-4px);
+  }
+  .why-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(0,212,255,0.1);
+    position: absolute;
+    top: 16px; right: 20px;
+    line-height: 1;
+  }
+  .why-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
+  .why-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--neon-blue);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .why-desc {
+    color: rgba(200,230,255,0.55);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  /* CONTACT */
+  .contact { padding: 100px 40px; background: rgba(0,0,0,0.3); }
+  .contact-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 60px;
+  }
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .contact-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,0.07), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .contact-card:hover {
+    border-color: rgba(0,212,255,0.4);
+    transform: translateX(6px);
+    box-shadow: -4px 0 30px rgba(0,212,255,0.15);
+  }
+  .contact-card:hover::before { opacity: 1; }
+  .contact-card-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .contact-card.whatsapp .contact-card-icon { background: rgba(37,211,102,0.15); border: 1px solid rgba(37,211,102,0.3); }
+  .contact-card.phone1 .contact-card-icon { background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); }
+  .contact-card.phone2 .contact-card-icon { background: rgba(180,79,255,0.12); border: 1px solid rgba(180,79,255,0.3); }
+  .contact-card.email .contact-card-icon { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.25); }
+
+  .contact-card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(200,230,255,0.4);
+    margin-bottom: 4px;
+  }
+  .contact-card-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .contact-card-sub {
+    font-size: 0.8rem;
+    color: rgba(200,230,255,0.45);
+    margin-top: 2px;
+  }
+
+  /* WHATSAPP FLOAT BTN */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    z-index: 999;
+    width: 60px; height: 60px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    text-decoration: none;
+    box-shadow: 0 4px 30px rgba(37,211,102,0.5);
+    animation: waBounce 2.5s ease-in-out infinite;
+    transition: transform 0.2s;
+  }
+  .whatsapp-float:hover { transform: scale(1.12); }
+  @keyframes waBounce {
+    0%,100%{transform:translateY(0) scale(1)}
+    50%{transform:translateY(-8px) scale(1.05)}
+  }
+  .whatsapp-float-tooltip {
+    position: absolute;
+    right: 70px;
+    background: #111;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Rajdhani';
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid rgba(37,211,102,0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .whatsapp-float:hover .whatsapp-float-tooltip { opacity: 1; }
+
+  /* CONTACT FORM SIDE */
+  .contact-form {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 20px;
+    padding: 40px 36px;
+  }
+  .form-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--neon-blue);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-group label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(200,230,255,0.45);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(0,212,255,0.04);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #e0f0ff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    -webkit-appearance: none;
+  }
+  .form-group select option { background: #020814; }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0,212,255,0.15);
+  }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .form-submit:hover {
+    box-shadow: 0 0 40px rgba(0,212,255,0.4);
+    transform: translateY(-2px);
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1;
+    background: rgba(0,0,0,0.6);
+    border-top: 1px solid rgba(0,212,255,0.1);
+    padding: 48px 40px 32px;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .footer-tagline {
+    color: rgba(200,230,255,0.4);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+  }
+  .footer-divider {
+    height: 1px;
+    background: rgba(0,212,255,0.08);
+    margin-bottom: 24px;
+  }
+  .footer-copy {
+    color: rgba(200,230,255,0.25);
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* SCAN LINE EFFECT */
+  .scan-line {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes scan {
+    from { top: 0; }
+    to { top: 100vh; }
+  }
+
+  /* GLITCH TEXT */
+  .glitch {
+    position: relative;
+    animation: glitchAnim 5s infinite;
+  }
+  @keyframes glitchAnim {
+    0%,94%,100% { clip-path: none; transform: none; }
+    95% { clip-path: inset(20% 0 60% 0); transform: translateX(-3px); }
+    96% { clip-path: inset(60% 0 10% 0); transform: translateX(3px); }
+    97% { clip-path: none; transform: none; }
+  }
+
+  /* 3D TILT CARDS */
+  .tilt-card { transform-style: preserve-3d; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #020814; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.3); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--neon-blue); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    .stats-strip { flex-wrap: wrap; gap: 20px; padding: 24px; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(0,212,255,0.12); padding-bottom: 16px; }
+    .services, .pricing, .why-us, .contact { padding: 60px 20px; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .price-card.premium { transform: scale(1); }
+    .notice-section { padding: 0 20px 40px; }
+    .notice-box { padding: 20px; flex-direction: column; gap: 12px; }
+    footer { padding: 40px 20px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="bg-grid"></div>
+<div class="scan-line"></div>
+<canvas id="particles"></canvas>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/917401768055?text=Hello%20JKM%20NXT%20GEN%20CREATION!%20I%20visited%20your%20website%20and%20I%27m%20interested%20in%20your%20website%20development%20packages.%20Could%20you%20please%20share%20more%20details%3F" class="whatsapp-float" target="_blank">
+  💬
+  <span class="whatsapp-float-tooltip">Chat on WhatsApp</span>
+</a>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">JKM <span>NXT GEN</span></div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#why">Why Us</a>
+    <a href="#contact" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Now Accepting New Projects
+  </div>
+  <h1 class="hero-title">
+    <span class="line1 glitch">JKM NXT GEN</span>
+    <span class="line2">CREATION</span>
+  </h1>
+  <p class="hero-subtitle">
+    Professional Websites That Build Trust &amp; Grow Your Business.<br>
+    Modern Design. Fast Performance. 100% Satisfaction Guaranteed.
+  </p>
+  <div class="hero-buttons">
+    <a href="#pricing" class="btn-primary">
+      🚀 View Packages
+    </a>
+    <a href="https://wa.me/917401768055?text=Hello%20JKM%20NXT%20GEN%20CREATION!%20I%27m%20interested%20in%20building%20a%20website.%20Can%20we%20discuss%20my%20requirements%3F" target="_blank" class="btn-secondary">
+      💬 WhatsApp Us
+    </a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip reveal">
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Satisfaction</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">3D</div>
+    <div class="stat-label">Premium Designs</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">Fast</div>
+    <div class="stat-label">Performance</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">₹3,999</div>
+    <div class="stat-label">Starting From</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-header reveal">
+    <span class="section-tag">// what we build</span>
+    <h2 class="section-title">Next-Gen <span>Digital Experiences</span></h2>
+    <p class="section-sub">From sleek business sites to immersive 3D web experiences — engineered for impact.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card tilt-card reveal reveal-delay-1">
+      <span class="service-icon">🌐</span>
+      <div class="service-title">Business Websites</div>
+      <div class="service-desc">Professionally designed websites that convert visitors into customers. Built for speed and trust.</div>
+      <div class="glow-bg" style="background:#0080ff"></div>
+    </div>
+    <div class="service-card tilt-card reveal reveal-delay-2">
+      <span class="service-icon">✨</span>
+      <div class="service-title">Premium Design</div>
+      <div class="service-desc">High-end visual designs with glassmorphism, gradients, and modern aesthetics that stand out.</div>
+      <div class="glow-bg" style="background:#00cc66"></div>
+    </div>
+    <div class="service-card tilt-card reveal reveal-delay-3">
+      <span class="service-icon">🎮</span>
+      <div class="service-title">3D & Interactive</div>
+      <div class="service-desc">Cutting-edge 3D animations, parallax effects, and interactive elements for luxury brands.</div>
+      <div class="glow-bg" style="background:#9900ff"></div>
+    </div>
+    <div class="service-card tilt-card reveal reveal-delay-4">
+      <span class="service-icon">📱</span>
+      <div class="service-title">Mobile First</div>
+      <div class="service-desc">Every website is perfectly responsive — flawless on all devices from mobile to widescreen.</div>
+      <div class="glow-bg" style="background:#ff6600"></div>
+    </div>
+    <div class="service-card tilt-card reveal reveal-delay-1">
+      <span class="service-icon">⚡</span>
+      <div class="service-title">Fast Performance</div>
+      <div class="service-desc">Optimized code and assets for blazing-fast load times. Better SEO. Better user experience.</div>
+      <div class="glow-bg" style="background:#ffd700"></div>
+    </div>
+    <div class="service-card tilt-card reveal reveal-delay-2">
+      <span class="service-icon">🔗</span>
+      <div class="service-title">Domain & Hosting</div>
+      <div class="service-desc">We help you connect your own domain to your new website — quick and hassle-free setup.</div>
+      <div class="glow-bg" style="background:#00d4ff"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-header reveal">
+    <span class="section-tag">// pricing plans</span>
+    <h2 class="section-title">Choose Your <span>Package</span></h2>
+    <p class="section-sub">Transparent pricing. No hidden fees. Just results.</p>
+  </div>
+  <div class="pricing-grid">
+
+    <!-- BASIC -->
+    <div class="price-card basic tilt-card reveal reveal-delay-1">
+      <div class="glow-corner"></div>
+      <div class="price-badge">Starter</div>
+      <span class="price-icon">🖥️</span>
+      <div class="price-name">Basic Website</div>
+      <div class="price-tagline">Perfect for small businesses and personal brands.</div>
+      <div class="price-amount"><span class="currency">₹</span>3,999</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">▸</span> Clean, Professional Design</li>
+        <li><span class="check">▸</span> Mobile Responsive</li>
+        <li><span class="check">▸</span> Fast Loading</li>
+        <li><span class="check">▸</span> Domain Connection Support</li>
+        <li><span class="check">▸</span> Contact Form / WhatsApp Button</li>
+        <li><span class="check">▸</span> SEO Basics Included</li>
+      </ul>
+      <div class="best-for">
+        <strong>⚡ Best For</strong>
+        Salons, Spas, Local Shops, Restaurants, Freelancers and Startups
+      </div>
+      <a href="https://wa.me/917401768055?text=Hello!%20I%27m%20interested%20in%20the%20Basic%20Website%20Package%20(₹3%2C999).%20Please%20share%20more%20details." target="_blank" class="price-btn">Get This Package</a>
+    </div>
+
+    <!-- PREMIUM -->
+    <div class="price-card premium tilt-card reveal reveal-delay-2">
+      <div class="glow-corner"></div>
+      <div class="price-popular">★ Most Popular</div>
+      <div class="price-badge">Business</div>
+      <span class="price-icon">💎</span>
+      <div class="price-name">Premium Website</div>
+      <div class="price-tagline">A complete business website designed to attract more customers.</div>
+      <div class="price-amount"><span class="currency">₹</span>5,999</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">▸</span> Everything in Basic</li>
+        <li><span class="check">▸</span> Premium Animations & Effects</li>
+        <li><span class="check">▸</span> Advanced UI/UX Design</li>
+        <li><span class="check">▸</span> Multi-Page Website</li>
+        <li><span class="check">▸</span> Gallery / Portfolio Section</li>
+        <li><span class="check">▸</span> Google Maps Integration</li>
+        <li><span class="check">▸</span> Social Media Links</li>
+      </ul>
+      <div class="best-for">
+        <strong>⚡ Best For</strong>
+        Salons & Spas, Gyms, Clinics, Real Estate Agents, Small Businesses
+      </div>
+      <a href="https://wa.me/917401768055?text=Hello!%20I%27m%20interested%20in%20the%20Premium%20Website%20Package%20(₹5%2C999).%20Please%20share%20more%20details." target="_blank" class="price-btn">Get This Package</a>
+    </div>
+
+    <!-- 3D ELITE -->
+    <div class="price-card elite tilt-card reveal reveal-delay-3">
+      <div class="glow-corner"></div>
+      <div class="price-badge">Elite</div>
+      <span class="price-icon">🎯</span>
+      <div class="price-name">3D Premium Website</div>
+      <div class="price-tagline">Luxury, modern websites with advanced animations and interactive effects.</div>
+      <div class="price-amount"><span class="currency">₹</span>9,999</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">▸</span> Everything in Premium</li>
+        <li><span class="check">▸</span> 3D Elements & Animations</li>
+        <li><span class="check">▸</span> Interactive Visual Effects</li>
+        <li><span class="check">▸</span> Glassmorphism / Luxury Styling</li>
+        <li><span class="check">▸</span> Custom Scroll Animations</li>
+        <li><span class="check">▸</span> Full Brand Identity Feel</li>
+        <li><span class="check">▸</span> Priority Delivery</li>
+      </ul>
+      <div class="best-for">
+        <strong>⚡ Best For</strong>
+        Luxury Brands, Premium Salons, Fashion Brands, Startups, High-End Businesses
+      </div>
+      <a href="https://wa.me/917401768055?text=Hello!%20I%27m%20interested%20in%20the%203D%20Premium%20Website%20Package%20(₹9%2C999).%20Please%20share%20more%20details." target="_blank" class="price-btn">Get This Package</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- NOTICE -->
+<div class="notice-section">
+  <div class="notice-box reveal">
+    <div class="notice-icon">⚠️</div>
+    <div>
+      <div class="notice-title">No Domain Provided</div>
+      <div class="notice-text">
+        Domain is <strong>not included</strong> in any package. You can purchase the domain in your own name &amp; we will connect it to your website. <strong>Website Update Policy:</strong> Future updates, content/design changes, or new feature additions will be charged separately based on work required.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY US -->
+<section class="why-us" id="why">
+  <div class="section-header reveal">
+    <span class="section-tag">// why choose us</span>
+    <h2 class="section-title">Built For <span>Results</span></h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-card reveal reveal-delay-1">
+      <div class="why-num">01</div>
+      <span class="why-icon">🎨</span>
+      <div class="why-title">Custom Design</div>
+      <div class="why-desc">Every website is uniquely designed — no templates, no cookie-cutter layouts.</div>
+    </div>
+    <div class="why-card reveal reveal-delay-2">
+      <div class="why-num">02</div>
+      <span class="why-icon">⚡</span>
+      <div class="why-title">Fast Delivery</div>
+      <div class="why-desc">Quick turnaround without compromising quality. Your business online, fast.</div>
+    </div>
+    <div class="why-card reveal reveal-delay-3">
+      <div class="why-num">03</div>
+      <span class="why-icon">💰</span>
+      <div class="why-title">Affordable</div>
+      <div class="why-desc">Premium quality at accessible prices. Best value for small and growing businesses.</div>
+    </div>
+    <div class="why-card reveal reveal-delay-4">
+      <div class="why-num">04</div>
+      <span class="why-icon">🤝</span>
+      <div class="why-title">Full Support</div>
+      <div class="why-desc">We're with you through the process — domain setup, launch, and beyond.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="section-header reveal">
+      <span class="section-tag">// let's connect</span>
+      <h2 class="section-title">Let's Build Your <span>Online Presence</span></h2>
+      <p class="section-sub">Reach out via WhatsApp, phone, or email. We respond fast.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal reveal-delay-1">
+
+        <a href="https://wa.me/917401768055?text=Hello%20JKM%20NXT%20GEN%20CREATION!%20I%20visited%20your%20website%20and%20I%27m%20interested%20in%20your%20website%20development%20packages.%20Could%20you%20please%20share%20more%20details%20and%20help%20me%20choose%20the%20right%20plan%3F" target="_blank" class="contact-card whatsapp">
+          <div class="contact-card-icon">💬</div>
+          <div>
+            <div class="contact-card-label">WhatsApp</div>
+            <div class="contact-card-value">7401768055</div>
+            <div class="contact-card-sub">Tap to start a chat instantly</div>
+          </div>
+        </a>
+
+        <a href="tel:+917401768055" class="contact-card phone1">
+          <div class="contact-card-icon">📞</div>
+          <div>
+            <div class="contact-card-label">Phone — Primary</div>
+            <div class="contact-card-value">7401768055</div>
+            <div class="contact-card-sub">Call us directly</div>
+          </div>
+        </a>
+
+        <a href="tel:+919994433792" class="contact-card phone2">
+          <div class="contact-card-icon">📱</div>
+          <div>
+            <div class="contact-card-label">Phone — Secondary</div>
+            <div class="contact-card-value">9994433792</div>
+            <div class="contact-card-sub">Alternative number</div>
+          </div>
+        </a>
+
+        <a href="mailto:jkmnxtgencreation@gmail.com" class="contact-card email">
+          <div class="contact-card-icon">✉️</div>
+          <div>
+            <div class="contact-card-label">Email</div>
+            <div class="contact-card-value" style="font-size:0.85rem">jkmnxtgencreation@gmail.com</div>
+            <div class="contact-card-sub">We reply within 24 hours</div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="contact-form reveal reveal-delay-2">
+        <div class="form-title">// Quick Enquiry</div>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+          <label>Phone / WhatsApp</label>
+          <input type="tel" placeholder="+91 XXXXX XXXXX">
+        </div>
+        <div class="form-group">
+          <label>Package Interested In</label>
+          <select>
+            <option value="">Select a package</option>
+            <option>Basic Website — ₹3,999</option>
+            <option>Premium Website — ₹5,999</option>
+            <option>3D Premium Website — ₹9,999</option>
+            <option>Not sure — need advice</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Business Type</label>
+          <input type="text" placeholder="e.g. Salon, Clinic, Startup...">
+        </div>
+        <button class="form-submit" onclick="sendWhatsApp()">
+          🚀 Send via WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">JKM NXT GEN CREATION</div>
+  <div class="footer-tagline">Professional Website Development for Growing Businesses</div>
+  <div class="footer-divider"></div>
+  <div class="footer-copy">© 2025 JKM NXT GEN CREATION · All Rights Reserved · Modern Designs. Fast Performance.</div>
+</footer>
+
+<script>
+  // CUSTOM CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+  function animRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); }
+  animRing();
+  document.querySelectorAll('a, button, .price-btn, .nav-cta').forEach(el => {
+    el.addEventListener('mouseenter', ()=>{ cursor.style.width='20px'; cursor.style.height='20px'; ring.style.width='56px'; ring.style.height='56px'; });
+    el.addEventListener('mouseleave', ()=>{ cursor.style.width='12px'; cursor.style.height='12px'; ring.style.width='36px'; ring.style.height='36px'; });
+  });
+
+  // NAVBAR SCROLL
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // PARTICLES
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width = window.innerWidth, H = canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+  const particles = Array.from({length:80},()=>({
+    x: Math.random()*W, y: Math.random()*H,
+    vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3,
+    r: Math.random()*1.5+.5,
+    a: Math.random()
+  }));
+  function drawParticles() {
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(0,212,255,${p.a*0.4})`;
+      ctx.fill();
+    });
+    // draw lines between close particles
+    for(let i=0;i<particles.length;i++) {
+      for(let j=i+1;j<particles.length;j++) {
+        const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(0,212,255,${(1-d/120)*0.08})`;
+          ctx.lineWidth=.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, {threshold:0.12});
+  reveals.forEach(el => observer.observe(el));
+
+  // 3D TILT CARDS
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      const cx = rect.width/2, cy = rect.height/2;
+      const rx2 = (y-cy)/cy*10, ry2 = -(x-cx)/cx*10;
+      card.style.transform = `perspective(600px) rotateX(${rx2}deg) rotateY(${ry2}deg) translateZ(8px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  // FORM WHATSAPP SEND
+  function sendWhatsApp() {
+    const name = document.querySelector('.form-group input[type=text]').value || 'Not provided';
+    const phone = document.querySelector('.form-group input[type=tel]').value || 'Not provided';
+    const pkg = document.querySelector('.form-group select').value || 'Not selected';
+    const biz = document.querySelectorAll('.form-group input[type=text]')[1]?.value || 'Not provided';
+    const msg = `Hello JKM NXT GEN CREATION! 👋\n\nNew Enquiry from Website:\n\n📛 Name: ${name}\n📞 Phone: ${phone}\n📦 Package: ${pkg}\n🏢 Business: ${biz}\n\nPlease get in touch!`;
+    window.open(`https://wa.me/917401768055?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+</script>
+</body>
+</html>
